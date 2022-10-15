@@ -1,11 +1,9 @@
-# `core`
-
-> TODO: description
+# core
 
 ## Usage
-
-```
-const core = require('core');
-
-// TODO: DEMONSTRATE API
-```
+ - 在 `core` 目录下执行 `npm link` 命令
+ - 之后就可以在全局使用 `imooc-cli-yan` 命令
+    ```bash
+    $ imooc-cli-yan
+    test imooc cli yan
+    ```

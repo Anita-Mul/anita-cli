@@ -5,7 +5,10 @@
   "author": "小可爱 <2659580957@qq.com>",
   "homepage": "https://github.com/Anita-Mul/imook-course#readme",
   "license": "ISC",
-  "main": "lib/core.js",
+  "main": "bin/imooc-cli-yan.js",
+  "bin": {
+    "imooc-cli-yan": "bin/imooc-cli-yan.js"
+  },
   "directories": {
     "lib": "lib",
     "test": "__tests__"
@@ -13,6 +16,9 @@
   "files": [
     "lib"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Anita-Mul/imook-course.git"

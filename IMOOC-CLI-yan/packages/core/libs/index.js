@@ -1,6 +1,7 @@
 'use strict';
 const program = require('commander');
 const { log } = require('@imooc-cli/utils');
+const packageConfig = require('../package');
 
 module.exports = cli;
 
@@ -9,6 +10,8 @@ async function cli() {
 }
 
 function registerCommand() {
+    program.version(packageConfig.version, '-v, -V, --version').usage('<command> [options]');
+
     program
         .command('learn')
         .description('前端脚手架学习')

@@ -1,14 +1,11 @@
 {
-  "name": "@imooc-cli-yan/core",
+  "name": "@imooc-cli-yan/utils",
   "version": "0.0.0",
-  "description": "imooc-cli-yan core",
+  "description": "imooc-cli-yan utils",
   "author": "小可爱 <2659580957@qq.com>",
   "homepage": "https://github.com/Anita-Mul/imook-course#readme",
   "license": "ISC",
-  "main": "bin/imooc-cli-yan.js",
-  "bin": {
-    "imooc-cli-yan": "bin/imooc-cli-yan.js"
-  },
+  "main": "lib/index.js.js",
   "directories": {
     "lib": "lib",
     "test": "__tests__"
@@ -23,24 +20,18 @@
     "type": "git",
     "url": "git+https://github.com/Anita-Mul/imook-course.git"
   },
-  "scripts": {
-    "test": "node ./__tests__/core.test.js"
-  },
   "bugs": {
     "url": "https://github.com/Anita-Mul/imook-course/issues"
   },
-  "devDependencies": {
-    "mocha": "^8.1.3"
+  "scripts": {
+    "test": "mocha __tests__/utils.test.js"
   },
   "dependencies": {
-    "@imooc-cli/utils": "^1.0.0",
-    "colors": "^1.4.0",
-    "commander": "^6.1.0",
-    "dotenv": "^8.2.0",
-    "minimist": "^1.2.5",
+    "axios": "^0.20.0",
+    "fs-extra": "^9.0.1",
     "npminstall": "^4.9.1",
-    "root-check": "^1.0.0",
+    "npmlog": "^4.1.2",
     "semver": "^7.3.2",
-    "user-home": "^2.0.0"
+    "url-join": "^4.0.1"
   }
 }

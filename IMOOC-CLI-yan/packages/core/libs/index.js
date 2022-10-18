@@ -44,8 +44,10 @@ function registerCommand() {
         .description('项目初始化')
         .option('--packagePath <packagePath>', '手动指定init包路径')
         .action(async (type, { packagePath }) => {
-          const packageName = '@imooc-cli/init';
-          const packageVersion = '1.0.0';
+          // const packageName = '@imooc-cli-yan/init';
+          // const packageVersion = '1.0.0';
+          const packageName = 'lodash';
+          const packageVersion = '4.17.21';
           await execCommand({ packagePath, packageName, packageVersion }, { type });
         });
     
@@ -59,6 +61,8 @@ async function execCommand({ packagePath, packageName, packageVersion }, extraOp
     name: packageName,
     version: packageVersion,
   });
+
+  execPackage.install();
 }
 
 

@@ -3,6 +3,7 @@ const urlJoin = require("url-join");
 const semver = require("semver");
 
 // 获取 registry 信息
+// sush as https://registry.npmjs.org/lodash
 function getNpmRegistry(isOriginal = false) {
   return isOriginal ? 'https://registry.npmjs.org' :
     'https://registry.npm.taobao.org';
@@ -50,6 +51,7 @@ function getLatestSemverVersion(baseVersion, versions) {
     .sort(function (a, b) {
       return semver.gt(b, a);
     });
+  console.log(versions);
   return versions[0];
 }
 

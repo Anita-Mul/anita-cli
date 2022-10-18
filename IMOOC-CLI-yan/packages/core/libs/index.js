@@ -4,7 +4,7 @@ const path = require('path');
 const program = require('commander');
 const userHome = require('user-home');
 const colors = require('colors/safe');
-const { log, npm } = require('@imooc-cli/utils');
+const { log, npm } = require('@imooc-cli-yan/utils');
 const packageConfig = require('../package');
 
 const {
@@ -55,6 +55,7 @@ async function prepare() {
 async function checkGlobalUpdate() {
     log.verbose('检查 imooc-cli 最新版本');
     const lastVersion = await npm.getNpmLatestSemverVersion(NPM_NAME, packageConfig.version);
+    console.log(lastVersion);
     if (lastVersion) {
       log.warn(colors.yellow(`请手动更新 ${NPM_NAME}，当前版本：${packageConfig.version}，最新版本：${lastVersion}
                   更新命令： npm install -g ${NPM_NAME}`));

@@ -12,6 +12,7 @@ class Package {
       this.storePath = options.storePath;
       this.packageName = options.name;
       this.packageVersion = options.version;
+      this.npmFilePath = path.resolve(this.storePath, `_${this.packageName}@${this.packageVersion}@${this.packageName}`);
     }
 
     prepare() {
@@ -36,6 +37,10 @@ class Package {
           version: this.packageVersion,
         }]
       });
+    }
+
+    exists() {
+      return fs.existsSync(this.npmFilePath);
     }
 }
   

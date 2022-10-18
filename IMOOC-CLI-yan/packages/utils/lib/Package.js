@@ -74,6 +74,19 @@ class Package {
       }
       return null;
     }
+
+    async update() {
+      const latestVersion = await this.getLatestVersion();
+      return npminstall({
+        root: this.targetPath,
+        storeDir: this.storePath,
+        registry: npm.getNpmRegistry(),
+        pkgs: [{
+          name: this.packageName,
+          version: latestVersion,
+        }],
+      });
+    }
 }
   
 module.exports = Package;

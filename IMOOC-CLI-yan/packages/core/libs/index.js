@@ -65,8 +65,9 @@ async function execCommand({ packagePath, packageName, packageVersion }, extraOp
   // execPackage.install();
   // console.log(execPackage.exists());
   // console.log(execPackage.getRootFilePath());
-  console.log(execPackage.version);
-  console.log(await execPackage.getLatestVersion());
+  // console.log(execPackage.version);
+  // console.log(await execPackage.getLatestVersion());
+  await execPackage.update();
 
 }
 

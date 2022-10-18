@@ -42,6 +42,24 @@ class Package {
     exists() {
       return fs.existsSync(this.npmFilePath);
     }
+
+    getPackage(isOriginal = false) {
+      if (!isOriginal) {
+        return fse.readJsonSync(path.resolve(this.npmFilePath, 'package.json'));
+      }
+      return fse.readJsonSync(path.resolve(this.storePath, 'package.json'));
+    }
+
+    getRootFilePath(isOriginal = false) {
+      const pkg = this.getPackage(isOriginal);
+      if (pkg) {
+        if (!isOriginal) {
+          return path.resolve(this.npmFilePath, pkg.main);
+        }
+        return path.resolve(this.storePath, pkg.main);
+      }
+      return null;
+    }
 }
   
 module.exports = Package;

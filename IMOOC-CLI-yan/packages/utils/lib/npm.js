@@ -51,7 +51,6 @@ function getLatestSemverVersion(baseVersion, versions) {
     .sort(function (a, b) {
       return semver.gt(b, a);
     });
-  console.log(versions);
   return versions[0];
 }
 

@@ -4,7 +4,7 @@ const path = require('path');
 const program = require('commander');
 const userHome = require('user-home');
 const colors = require('colors/safe');
-const { log, npm } = require('@imooc-cli-yan/utils');
+const { log, npm, Package } = require('@imooc-cli-yan/utils');
 const packageConfig = require('../package');
 
 const {
@@ -38,9 +38,29 @@ function registerCommand() {
             log.success('欢迎学习', '前端脚手架');
             log.success('作者介绍', 'yanxuefang');
         });
+
+    program
+        .command('init [type]')
+        .description('项目初始化')
+        .option('--packagePath <packagePath>', '手动指定init包路径')
+        .action(async (type, { packagePath }) => {
+          const packageName = '@imooc-cli/init';
+          const packageVersion = '1.0.0';
+          await execCommand({ packagePath, packageName, packageVersion }, { type });
+        });
     
     program.parse(process.argv);
 }
+
+async function execCommand({ packagePath, packageName, packageVersion }, extraOptions) {
+  const execPackage = new Package({
+    targetPath: packagePath,
+    storePath: packagePath,
+    name: packageName,
+    version: packageVersion,
+  });
+}
+
 
 async function prepare() {
     checkPkgVersion();          // 检查当前运行版本
@@ -55,11 +75,10 @@ async function prepare() {
 async function checkGlobalUpdate() {
     log.verbose('检查 imooc-cli 最新版本');
     const lastVersion = await npm.getNpmLatestSemverVersion(NPM_NAME, packageConfig.version);
-    console.log(lastVersion);
-    if (lastVersion) {
-      log.warn(colors.yellow(`请手动更新 ${NPM_NAME}，当前版本：${packageConfig.version}，最新版本：${lastVersion}
-                  更新命令： npm install -g ${NPM_NAME}`));
-    }
+    // if (lastVersion) {
+    //   log.warn(colors.yellow(`请手动更新 ${NPM_NAME}，当前版本：${packageConfig.version}，最新版本：${lastVersion}
+    //               更新命令： npm install -g ${NPM_NAME}`));
+    // }
 }
 
 function checkEnv() {

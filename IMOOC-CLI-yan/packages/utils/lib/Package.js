@@ -60,6 +60,20 @@ class Package {
       }
       return null;
     }
+
+    get version() {
+      this.prepare();
+      return this.exists() ? this.getPackage().version : null;
+    }
+  
+    async getLatestVersion() {
+      const version = this.version;
+      if (version) {
+        const latestVersion = await npm.getNpmLatestSemverVersion(this.packageName, version);
+        return latestVersion;
+      }
+      return null;
+    }
 }
   
 module.exports = Package;

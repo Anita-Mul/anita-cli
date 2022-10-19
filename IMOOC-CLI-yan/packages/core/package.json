@@ -34,7 +34,6 @@
   },
   "dependencies": {
     "@imooc-cli-yan/utils": "^0.0.0",
-    "@imooc-cli-yan/init": "^0.0.0",
     "colors": "^1.4.0",
     "commander": "^6.1.0",
     "dotenv": "^8.2.0",

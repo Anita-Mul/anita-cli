@@ -5,7 +5,6 @@ const program = require('commander');
 const userHome = require('user-home');
 const colors = require('colors/safe');
 const { log, npm, Package } = require('@imooc-cli-yan/utils');
-const init = require('@imooc-cli-yan/init');
 const packageConfig = require('../package');
 
 const {
@@ -49,7 +48,6 @@ function registerCommand() {
           // const packageVersion = '1.0.0';
           const packageName = 'lodash';
           const packageVersion = '4.17.21';
-          init()
           // await execCommand({ packagePath, packageName, packageVersion }, { type });
         });
     

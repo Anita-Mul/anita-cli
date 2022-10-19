@@ -52,6 +52,28 @@ function registerCommand() {
         });
     
     program
+        .command('clean')
+        .description('清空缓存文件')
+        .option('-a, --all', '清空全部')
+        .option('-d, --dep', '清空依赖文件')
+        .action((options) => {
+          log.notice('开始清空缓存文件');
+          if (options.all) {
+            cleanAll();
+          } else if (options.dep) {
+            const depPath = path.resolve(config.cliHome, DEPENDENCIES_PATH);
+            if (fs.existsSync(depPath)) {
+              fse.emptyDirSync(depPath);
+              log.success('清空依赖文件成功', depPath);
+            } else {
+              log.success('文件夹不存在', depPath);
+            }
+          } else {
+            cleanAll();
+          }
+        });
+      
+    program
       .option('--debug', '打开调试模式')
       .parse(process.argv);
 
@@ -59,6 +81,15 @@ function registerCommand() {
       program.outputHelp();
       console.log();
     }
+}
+
+function cleanAll() {
+  if (fs.existsSync(config.cliHome)) {
+    fse.emptyDirSync(config.cliHome);
+    log.success('清空全部缓存文件成功', config.cliHome);
+  } else {
+    log.success('文件夹不存在', config.cliHome);
+  }
 }
 
 async function execCommand({ packagePath, packageName, packageVersion }, extraOptions) {

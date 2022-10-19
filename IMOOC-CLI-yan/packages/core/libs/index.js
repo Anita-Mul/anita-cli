@@ -51,7 +51,14 @@ function registerCommand() {
           await execCommand({ packagePath, packageName, packageVersion }, { type });
         });
     
-    program.parse(process.argv);
+    program
+      .option('--debug', '打开调试模式')
+      .parse(process.argv);
+
+    if (args._.length < 1) {
+      program.outputHelp();
+      console.log();
+    }
 }
 
 async function execCommand({ packagePath, packageName, packageVersion }, extraOptions) {

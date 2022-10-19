@@ -5,6 +5,7 @@ const fse = require('fs-extra');
 
 const log = require('./log');
 const npm = require('./npm');
+const formatPath = require('./formatPath');
 class Package {
     constructor(options) {
       log.verbose('options', options);
@@ -54,9 +55,9 @@ class Package {
       const pkg = this.getPackage(isOriginal);
       if (pkg) {
         if (!isOriginal) {
-          return path.resolve(this.npmFilePath, pkg.main);
+          return formatPath(path.resolve(this.npmFilePath, pkg.main));
         }
-        return path.resolve(this.storePath, pkg.main);
+        return formatPath(path.resolve(this.storePath, pkg.main));
       }
       return null;
     }

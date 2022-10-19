@@ -48,29 +48,79 @@ function registerCommand() {
           // const packageVersion = '1.0.0';
           const packageName = 'lodash';
           const packageVersion = '4.17.21';
-          // await execCommand({ packagePath, packageName, packageVersion }, { type });
+          await execCommand({ packagePath, packageName, packageVersion }, { type });
         });
     
     program.parse(process.argv);
 }
 
 async function execCommand({ packagePath, packageName, packageVersion }, extraOptions) {
-  const execPackage = new Package({
-    targetPath: packagePath,
-    storePath: packagePath,
-    name: packageName,
-    version: packageVersion,
-  });
+  let rootFile;
 
-  // execPackage.install();
-  // console.log(execPackage.exists());
-  // console.log(execPackage.getRootFilePath());
-  // console.log(execPackage.version);
-  // console.log(await execPackage.getLatestVersion());
-  await execPackage.update();
+  try {
+    // 如果 init 包本身存在，缓存
+    if (packagePath) {
+      const execPackage = new Package({
+        targetPath: packagePath,
+        storePath: packagePath,
+        name: packageName,
+        version: packageVersion,
+      });
+      rootFile = execPackage.getRootFilePath(true);
+    } else {
+      // C:\Users\小可爱\.imooc-cli-yan
+      const { cliHome } = config;
+      // dependencies
+      const packageDir = `${DEPENDENCIES_PATH}`;
+      // C:\Users\小可爱\.imooc-cli-yan\dependencies
+      const targetPath = path.resolve(cliHome, packageDir);
+      // C:\Users\小可爱\.imooc-cli-yan\dependencies\node_modules
+      const storePath = path.resolve(targetPath, 'node_modules');
+      const initPackage = new Package({
+        targetPath,
+        storePath,
+        name: packageName,
+        version: packageVersion,
+      });
+      if (initPackage.exists()) {
+        await initPackage.update();
+      } else {
+        await initPackage.install();
+      }
+      rootFile = initPackage.getRootFilePath();
+    }
+    
 
+    const _config = Object.assign({}, config, extraOptions);
+    if (fs.existsSync(rootFile)) {
+      const code = `require('${rootFile}')(${JSON.stringify(_config)})`;
+      // 多线程
+      const p = exec('node', ['-e', code], { 'stdio': 'inherit' });
+      p.on('error', e => {
+        log.verbose('spawn error', e);
+        handleError(e);
+        process.exit(1);
+      });
+      p.on('exit', c => {
+        log.verbose('spawn exit', c);
+        process.exit(c);
+      });
+    } else {
+      throw new Error('入口文件不存在，请重试！');
+    }
+  } catch (e) {
+    log.error(e.message);
+  }
 }
 
+function exec(command, args, options) {
+  const win32 = process.platform === 'win32';
+
+  const cmd = win32 ? 'cmd' : command;
+  const cmdArgs = win32 ? ['/c'].concat(command, args) : args;
+  
+  return require('child_process').spawn(cmd, cmdArgs, options || {});
+}
 
 async function prepare() {
     checkPkgVersion();          // 检查当前运行版本

@@ -1,7 +1,8 @@
 'use strict';
 const path = require('path');
 const fs = require('fs');
-const { log, inquirer, Package, spinner, sleep } = require('@imooc-cli-yan/utils');
+const fse = require('fs-extra');
+const { log, inquirer, Package, spinner, sleep, exec } = require('@imooc-cli-yan/utils');
 const getProjectTemplate = require('./getProjectTemplate');
 
 async function init(options) {
@@ -24,8 +25,54 @@ async function init(options) {
         // 缓存项目模板文件
         const template = await downloadTemplate(templateList, options);
         log.verbose('template', template);
+        // 安装项目模板
+        await installTemplate(template, options);
     } catch (e) {
         log.error('Error:', e.message);
+    }
+}
+
+async function execStartCommand(targetPath, startCommand) {
+    return new Promise((resolve, reject) => {
+        const p = exec(startCommand[0], startCommand.slice(1), { stdio: 'inherit', cwd: targetPath });
+        p.on('error', e => {
+            reject(e);
+        });
+        p.on('exit', c => {
+            resolve(c);
+        });
+    });
+}
+
+async function npminstall(targetPath) {
+    return new Promise((resolve, reject) => {
+        // const p = exec('npm', ['install'], { stdio: 'inherit', cwd: targetPath });
+        const p = exec('yarn', [], { stdio: 'inherit', cwd: targetPath });
+        p.on('error', e => {
+            reject(e);
+        });
+        p.on('exit', c => {
+            resolve(c);
+        });
+    });
+}
+
+async function installTemplate(template, options) {
+    // 安装模板
+    let spinnerStart = spinner(`正在安装模板...`);
+    await sleep(1000);
+    const sourceDir = template.path;
+    spinnerStart.stop(true);
+    log.success('模板安装成功');
+    // 安装依赖文件
+    log.notice('开始安装依赖');
+    await npminstall(sourceDir);
+    log.success('依赖安装成功');
+    // 启动代码
+    if (template.startCommand) {
+        log.notice('开始执行启动命令');
+        const startCommand = template.startCommand.split(' ');
+        await execStartCommand(sourceDir, startCommand);
     }
 }
 

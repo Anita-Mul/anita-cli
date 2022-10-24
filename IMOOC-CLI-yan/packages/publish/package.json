@@ -1,7 +1,7 @@
 {
-  "name": "@imooc-cli-yan/init",
+  "name": "@imooc-cli-yan/publish",
   "version": "0.0.0",
-  "description": "@imooc-cli-yan init",
+  "description": "what does the foxes say",
   "author": "小可爱 <2659580957@qq.com>",
   "homepage": "https://github.com/Anita-Mul/imook-course#readme",
   "license": "ISC",
@@ -21,14 +21,13 @@
     "url": "git+https://github.com/Anita-Mul/imook-course.git"
   },
   "scripts": {
-    "test": "mocha __tests__/init.test.js"
+    "test": "node ./__tests__/publish.test.js"
   },
   "bugs": {
     "url": "https://github.com/Anita-Mul/imook-course/issues"
   },
   "dependencies": {
-    "@imooc-cli-yan/utils": "^0.0.0",
-    "fs-extra": "^9.0.1"
+    "@imooc-cli-yan/utils": "^0.0.0"
   },
   "devDependencies": {
     "mocha": "^8.1.3"

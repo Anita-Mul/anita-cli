@@ -43,12 +43,13 @@ function registerCommand() {
         .command('init [type]')
         .description('项目初始化')
         .option('--packagePath <packagePath>', '手动指定init包路径')
-        .action(async (type, { packagePath }) => {
+        .option('--force', '覆盖当前路径文件（谨慎使用）')
+        .action(async (type, { packagePath, force }) => {
           // const packageName = '@imooc-cli-yan/init';
           // const packageVersion = '1.0.0';
           const packageName = 'lodash';
           const packageVersion = '4.17.21';
-          await execCommand({ packagePath, packageName, packageVersion }, { type });
+          await execCommand({ packagePath, packageName, packageVersion }, { type, force });
         });
     
     program
@@ -120,7 +121,7 @@ async function execCommand({ packagePath, packageName, packageVersion }, extraOp
         name: packageName,
         version: packageVersion,
       });
-      if (initPackage.exists()) {
+      if (await initPackage.exists()) {
         await initPackage.update();
       } else {
         await initPackage.install();
@@ -135,12 +136,12 @@ async function execCommand({ packagePath, packageName, packageVersion }, extraOp
       // 多线程
       const p = exec('node', ['-e', code], { 'stdio': 'inherit' });
       p.on('error', e => {
-        log.verbose('spawn error', e);
+        log.verbose('命令执行失败:', e);
         handleError(e);
         process.exit(1);
       });
       p.on('exit', c => {
-        log.verbose('spawn exit', c);
+        log.verbose('命令执行成功:', c);
         process.exit(c);
       });
     } else {
@@ -171,12 +172,12 @@ async function prepare() {
 }
 
 async function checkGlobalUpdate() {
-    log.verbose('检查 imooc-cli 最新版本');
-    const lastVersion = await npm.getNpmLatestSemverVersion(NPM_NAME, packageConfig.version);
-    // if (lastVersion) {
-    //   log.warn(colors.yellow(`请手动更新 ${NPM_NAME}，当前版本：${packageConfig.version}，最新版本：${lastVersion}
-    //               更新命令： npm install -g ${NPM_NAME}`));
-    // }
+  const currentVersion = packageConfig.version;
+  const lastVersion = await npm.getNpmLatestSemverVersion(NPM_NAME, currentVersion);
+  if (semver.gt(lastVersion, currentVersion)) {
+    log.warn(colors.yellow(`请手动更新 ${NPM_NAME}，当前版本：${packageConfig.version}，最新版本：${lastVersion}
+                更新命令： npm install -g ${NPM_NAME}`));
+  }
 }
 
 function checkEnv() {

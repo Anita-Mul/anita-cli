@@ -2,7 +2,7 @@
 const path = require('path');
 const fs = require('fs');
 const fse = require('fs-extra');
-const { log, inquirer, Package, spinner, sleep, formatName, formatClassName, exec } = require('@imooc-cli-yan/utils');
+const { log, inquirer, Package, spinner, sleep, formatName, formatClassName, exec, ejs } = require('@imooc-cli-yan/utils');
 const getProjectTemplate = require('./getProjectTemplate');
 
 const TYPE_PROJECT = 'project';
@@ -29,7 +29,7 @@ async function init(options) {
         const template = await downloadTemplate(templateList, options);
         log.verbose('template', template);
         // 安装项目模板
-        await installTemplate(template, options);
+        await installTemplate(template, project, options);
     } catch (e) {
         log.error('Error:', e.message);
     }
@@ -60,13 +60,28 @@ async function npminstall(targetPath) {
     });
 }
 
-async function installTemplate(template, options) {
+async function installTemplate(template, ejsData, options) {
     // 安装模板
     let spinnerStart = spinner(`正在安装模板...`);
     await sleep(1000);
     const sourceDir = template.path;
+    fse.ensureDirSync(sourceDir);
     spinnerStart.stop(true);
     log.success('模板安装成功');
+    // ejs 模板渲染
+    const ejsIgnoreFiles = [
+        `**/node_modules/**`,
+        `**/.git/**`,
+        `**/.vscode/**`,
+        `**/.DS_Store`,
+    ];
+    if (template.ignore) {
+        ejsIgnoreFiles.push(...template.ignore);
+    }
+    log.verbose('ejsData', ejsData);
+    await ejs(sourceDir, ejsData, {
+        ignore: ejsIgnoreFiles
+    });
     // 安装依赖文件
     log.notice('开始安装依赖');
     await npminstall(sourceDir);

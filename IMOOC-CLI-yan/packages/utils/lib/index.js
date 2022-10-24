@@ -6,6 +6,7 @@ const npm = require('./npm');
 const inquirer = require('./inquirer');
 const formatPath = require('./formatPath');
 const spinner = require('./spinner');
+const ejs = require('./ejs');
 
 const Package = require('./Package');
 
@@ -75,4 +76,5 @@ module.exports = {
   exec,
   formatName,
   formatClassName,
+  ejs
 };

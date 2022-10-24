@@ -2,8 +2,11 @@
 const path = require('path');
 const fs = require('fs');
 const fse = require('fs-extra');
-const { log, inquirer, Package, spinner, sleep, exec } = require('@imooc-cli-yan/utils');
+const { log, inquirer, Package, spinner, sleep, formatName, formatClassName, exec } = require('@imooc-cli-yan/utils');
 const getProjectTemplate = require('./getProjectTemplate');
+
+const TYPE_PROJECT = 'project';
+const TYPE_COMPONENT = 'component';
 
 async function init(options) {
     try {
@@ -21,7 +24,7 @@ async function init(options) {
             return;
         }
         // 获取项目模板列表
-        const { templateList } = result;
+        const { templateList, project } = result;
         // 缓存项目模板文件
         const template = await downloadTemplate(templateList, options);
         log.verbose('template', template);
@@ -148,14 +151,77 @@ async function prepare(options) {
     //     }
     // }
 
-    const templateList = await getProjectTemplate();
-    if (!templateList || templateList.length === 0) {
-        throw new Error('项目模板列表获取失败');
-    }
+    let initType = await getInitType();
+    log.verbose('initType', initType);
+    if (initType === TYPE_PROJECT) {
+        const templateList = await getProjectTemplate();
 
-    return {
-        templateList,
-    };
+        if (!templateList || templateList.length === 0) {
+            throw new Error('项目模板列表获取失败');
+        }
+
+        let projectName = '';
+        let className = '';
+
+        while (!projectName) {
+            projectName = await getProjectName();
+            if (projectName) {
+                projectName = formatName(projectName);
+                className = formatClassName(projectName);
+            }
+            log.verbose('projectName', projectName);
+            log.verbose('className', className);
+        }
+
+        let version = '1.0.0';
+
+        do {
+            version = await getProjectVersion(version);
+            log.verbose('version', version);
+        } while (!version);
+        
+        return {
+            templateList,
+            project: {
+                name: projectName,
+                className,
+                version,
+            },
+        };
+    } else {
+        return null;
+    }
+}
+
+function getProjectVersion(defaultVersion) {
+    return inquirer({
+        type: 'string',
+        message: '请输入项目版本号',
+        defaultValue: defaultVersion,
+    });
+}
+  
+function getInitType() {
+    return inquirer({
+        type: 'list',
+        choices: [{
+            name: '项目',
+            value: TYPE_PROJECT,
+        }, {
+            name: '组件',
+            value: TYPE_COMPONENT,
+        }],
+        message: '请选择初始化类型',
+        defaultValue: TYPE_PROJECT,
+    });
+}
+  
+function getProjectName() {
+    return inquirer({
+        type: 'string',
+        message: '请输入项目名称',
+        defaultValue: '',
+    });
 }
 
 function createTemplateChoice(list) {
@@ -166,5 +232,6 @@ function createTemplateChoice(list) {
 }
 
 // test init function
-init({cliHome: 'C:\\Users\\小可爱\\Desktop\\test-react'});
+// init({cliHome: 'C:\\Users\\小可爱\\Desktop\\test-react'});
+prepare();
 module.exports = init;

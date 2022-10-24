@@ -29,8 +29,12 @@
   "dependencies": {
     "axios": "^0.20.0",
     "cli-spinner": "^0.2.10",
+    "ejs": "^3.1.8",
     "fs-extra": "^9.0.1",
+    "glob": "^8.0.3",
     "inquirer": "^7.3.3",
+    "kebab-case": "^1.0.2",
+    "lodash": "^4.17.21",
     "npminstall": "^4.9.1",
     "npmlog": "^4.1.2",
     "semver": "^7.3.2",

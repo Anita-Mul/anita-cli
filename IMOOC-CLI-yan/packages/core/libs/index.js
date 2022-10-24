@@ -4,7 +4,7 @@ const path = require('path');
 const program = require('commander');
 const userHome = require('user-home');
 const colors = require('colors/safe');
-const { log, npm, Package } = require('@imooc-cli-yan/utils');
+const { log, npm, Package, exec } = require('@imooc-cli-yan/utils');
 const packageConfig = require('../package');
 
 const {

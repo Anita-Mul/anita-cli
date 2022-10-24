@@ -1,5 +1,6 @@
 'use strict';
-const { log, inquirer } = require('@imooc-cli-yan/utils');
+const path = require('path');
+const { log, inquirer, Package, spinner, sleep } = require('@imooc-cli-yan/utils');
 const getProjectTemplate = require('./getProjectTemplate');
 
 async function init(options) {
@@ -19,38 +20,72 @@ async function init(options) {
         }
         // 获取项目模板列表
         const { templateList } = result;
-        console.log(templateList);
+        // 缓存项目模板文件
+        const template = await downloadTemplate(templateList, options);
+        log.verbose('template', template);
     } catch (e) {
         log.error('Error:', e.message);
     }
 }
 
+async function downloadTemplate(templateList, options) {
+    // 用户交互选择
+    const templateName = await inquirer({
+        choices: createTemplateChoice(templateList),
+        message: '请选择项目模板',
+    });
+    log.verbose('template', templateName);
+    const selectedTemplate = templateList.find(item => item.npmName === templateName);
+    log.verbose('selected template', selectedTemplate);
+    const { cliHome } = options;
+    const targetPath = path.resolve(cliHome, 'template');
+    // 基于模板生成 Package 对象
+    const templatePkg = new Package({
+        targetPath,
+        storePath: targetPath,
+        name: selectedTemplate.npmName,
+        version: selectedTemplate.version,
+    });
+    // 如果模板不存在则进行下载
+    if (!await templatePkg.exists()) {
+        let spinnerStart = spinner(`正在下载模板...`);
+        await sleep(1000);
+        await templatePkg.install();
+        spinnerStart.stop(true);
+        console.log(1111);
+        log.success('下载模板成功');
+    } else {
+        log.notice('模板已存在', `${selectedTemplate.npmName}@${selectedTemplate.version}`);
+        log.notice('模板路径', `${targetPath}`);
+    }
+}
+
 async function prepare(options) {
-    let fileList = fs.readdirSync(process.cwd());
-    fileList = fileList.filter(file => ['node_modules', '.git', '.DS_Store'].indexOf(file) < 0);
-    log.verbose('fileList', fileList);
-    let continueWhenDirNotEmpty = true;
-    if (fileList && fileList.length > 0) {
-        continueWhenDirNotEmpty = await inquirer({
-            type: 'confirm',
-            message: '当前文件夹不为空，是否继续创建项目？',
-            defaultValue: false,
-        });
-    }
-    if (!continueWhenDirNotEmpty) {
-        return;
-    }
-    if (options.force) {
-        const targetDir = options.targetPath;
-        const confirmEmptyDir = await inquirer({
-            type: 'confirm',
-            message: '是否确认清空当下目录下的文件',
-            defaultValue: false,
-        });
-        if (confirmEmptyDir) {
-            fse.emptyDirSync(targetDir);
-        }
-    }
+    // let fileList = fs.readdirSync(process.cwd());
+    // fileList = fileList.filter(file => ['node_modules', '.git', '.DS_Store'].indexOf(file) < 0);
+    // log.verbose('fileList', fileList);
+    // let continueWhenDirNotEmpty = true;
+    // if (fileList && fileList.length > 0) {
+    //     continueWhenDirNotEmpty = await inquirer({
+    //         type: 'confirm',
+    //         message: '当前文件夹不为空，是否继续创建项目？',
+    //         defaultValue: false,
+    //     });
+    // }
+    // if (!continueWhenDirNotEmpty) {
+    //     return;
+    // }
+    // if (options.force) {
+    //     const targetDir = options.targetPath;
+    //     const confirmEmptyDir = await inquirer({
+    //         type: 'confirm',
+    //         message: '是否确认清空当下目录下的文件',
+    //         defaultValue: false,
+    //     });
+    //     if (confirmEmptyDir) {
+    //         fse.emptyDirSync(targetDir);
+    //     }
+    // }
 
     const templateList = await getProjectTemplate();
     if (!templateList || templateList.length === 0) {
@@ -70,5 +105,5 @@ function createTemplateChoice(list) {
 }
 
 // test init function
-init({});
+init({cliHome: 'C:\\Users\\小可爱\\Desktop\\test-react'});
 module.exports = init;

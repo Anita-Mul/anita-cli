@@ -108,6 +108,11 @@ async function downloadTemplate(templateList, options) {
     } else {
         log.notice('模板已存在', `${selectedTemplate.npmName}@${selectedTemplate.version}`);
         log.notice('模板路径', `${targetPath}`);
+        let spinnerStart = spinner(`开始更新模板...`);
+        await sleep(1000);
+        await templatePkg.update();
+        spinnerStart.stop(true);
+        log.success('更新模板成功');
     }
 
     // 生成模板路径
@@ -232,6 +237,5 @@ function createTemplateChoice(list) {
 }
 
 // test init function
-// init({cliHome: 'C:\\Users\\小可爱\\Desktop\\test-react'});
-prepare();
+init({cliHome: 'C:\\Users\\小可爱\\Desktop\\test-react'});
 module.exports = init;

@@ -1,5 +1,6 @@
 'use strict';
 const path = require('path');
+const fs = require('fs');
 const { log, inquirer, Package, spinner, sleep } = require('@imooc-cli-yan/utils');
 const getProjectTemplate = require('./getProjectTemplate');
 
@@ -58,6 +59,19 @@ async function downloadTemplate(templateList, options) {
         log.notice('模板已存在', `${selectedTemplate.npmName}@${selectedTemplate.version}`);
         log.notice('模板路径', `${targetPath}`);
     }
+
+    // 生成模板路径
+    const templatePath = path.resolve(templatePkg.npmFilePath, 'template');
+    log.verbose('template path', templatePath);
+    if (!fs.existsSync(templatePath)) {
+        throw new Error(`[${templateName}]项目模板不存在！`);
+    }
+    const template = {
+        ...selectedTemplate,
+        path: templatePath,
+    };
+
+    return template;
 }
 
 async function prepare(options) {

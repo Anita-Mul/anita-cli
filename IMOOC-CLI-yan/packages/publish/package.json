@@ -27,7 +27,8 @@
     "url": "https://github.com/Anita-Mul/imook-course/issues"
   },
   "dependencies": {
-    "@imooc-cli-yan/utils": "^0.0.0"
+    "@imooc-cli-yan/utils": "^0.0.0",
+    "fs-extra": "^10.1.0"
   },
   "devDependencies": {
     "mocha": "^8.1.3"

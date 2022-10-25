@@ -75,6 +75,18 @@ function registerCommand() {
         });
       
     program
+        .command('publish')
+        .description('项目发布')
+        .option('--packagePath <packagePath>', '手动指定publish包路径')
+        .option('--refreshToken', '强制更新github token信息')
+        .option('--refreshRemote', '强制更新github remote信息')
+        .action(async ({ packagePath, refreshToken, refreshRemote }) => {
+          const packageName = '@imooc-cli-yan/publish';
+          const packageVersion = '0.0.0';
+          await execCommand({ packagePath, packageName, packageVersion }, { refreshToken, refreshRemote });
+    });
+
+    program
       .option('--debug', '打开调试模式')
       .parse(process.argv);
 

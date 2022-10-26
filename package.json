@@ -2,8 +2,8 @@
   "name": "imooc-cli-yan",
   "version": "1.0.0",
   "scripts": {
-    "cz": "node ./node_modules/commitizen/bin/git-cz",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "commit": "node ./node_modules/commitizen/bin/git-cz"
   },
   "config": {
     "commitizen": {

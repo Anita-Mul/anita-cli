@@ -1,0 +1,26 @@
+{
+  "name": "@imooc-cli-yan/hooks",
+  "version": "0.0.0",
+  "description": "> TODO: description",
+  "author": "小可爱 <2659580957@qq.com>",
+  "homepage": "https://github.com/Anita-Mul/imook-course#readme",
+  "license": "ISC",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Anita-Mul/imook-course.git"
+  },
+  "scripts": {
+    "test": "node ./__tests__/hooks.test.js"
+  },
+  "bugs": {
+    "url": "https://github.com/Anita-Mul/imook-course/issues"
+  }
+}

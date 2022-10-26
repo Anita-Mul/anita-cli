@@ -38,6 +38,9 @@
     "npminstall": "^4.9.1",
     "npmlog": "^4.1.2",
     "semver": "^7.3.2",
-    "url-join": "^4.0.1"
+    "simple-git": "^3.14.1",
+    "terminal-link": "^3.0.0",
+    "url-join": "^4.0.1",
+    "user-home": "^3.0.0"
   }
 }

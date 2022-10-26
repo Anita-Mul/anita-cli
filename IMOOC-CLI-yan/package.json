@@ -1,7 +1,17 @@
 {
   "name": "imooc-cli-yan",
   "version": "1.0.0",
+  "scripts": {
+    "cz": "node ./node_modules/commitizen/bin/git-cz"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-customizable"
+    }
+  },
   "devDependencies": {
+    "commitizen": "^4.2.5",
+    "cz-customizable": "^7.0.0",
     "lerna": "^6.0.0"
   }
 }

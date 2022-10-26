@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const fse = require('fs-extra');
-const { log } = require('@imooc-cli-yan/utils');
+const { log, Github } = require('@imooc-cli-yan/utils');
 
 async function publish(options) {
   log.verbose('publish', options);
@@ -11,6 +11,14 @@ async function publish(options) {
     // 本地初始化
     // 检查项目的基本信息
     const projectInfo = checkProjectInfo();
+    const Git = new Github(projectInfo, options);
+    await Git.prepare();
+    // 生成远程 git 仓库链接
+    // 检查远程仓库是否存在
+    // 仓库存在时关联远程仓库
+    // 根据 package.json version 创建分支
+    // 本地 git 提交
+    // 远程 git 提交
   } catch (e) {
     log.error('Error:', e.message);
     log.error('Error:', e.stack);

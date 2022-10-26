@@ -9,6 +9,7 @@ const spinner = require('./spinner');
 const ejs = require('./ejs');
 
 const Package = require('./Package');
+const Github = require('./Github');
 
 function sleep(timeout) {
   return new Promise((resolve => {
@@ -76,5 +77,6 @@ module.exports = {
   exec,
   formatName,
   formatClassName,
-  ejs
+  ejs,
+  Github
 };
